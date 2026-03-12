@@ -1,4 +1,3 @@
-package Ex1;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -31,8 +30,17 @@ public class SeasonUtilTest {
             seasonables[2*i] = animals[i];
             seasonables[2*i+1] = trees[i];
         }
+//we added tests, to be exactly like the word exemple, from here
+        System.out.println("\n\n---Sorting animals---");
+        SeasonUtil.sortSeasonable(animals);
+        System.out.println(SeasonUtil.reportAll(animals));
 
-        System.out.println("\n---All together---\n");
+        System.out.println("\n\n---Sorting trees---");
+        SeasonUtil.sortSeasonable(trees);
+        System.out.println(SeasonUtil.reportAll(trees));
+
+        System.out.println("\n\n---All together---\n");
+//until here
         System.out.println(SeasonUtil.reportAll(seasonables));
 
         System.out.println("\n---change six seasons for animals and trees---\n");

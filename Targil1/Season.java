@@ -1,4 +1,8 @@
 public enum Season {
     WINTER, SPRING, SUMMER, FALL;
-    // TODO: Add auxiliary functions.
+
+    public Season next() {
+        Season[] values = values();
+        return values[(this.ordinal() + 1) % values.length];
+    }
 }

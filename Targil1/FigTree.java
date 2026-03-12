@@ -2,17 +2,46 @@ public class FigTree extends Tree {
 
 
     FigTree(int height, Season season) {
-        // TODO: Implement.
-        super(0,null,null);
+        super(height, season, season == Season.WINTER ? null :
+                               season == Season.FALL ? Color.YELLOW : Color.GREEN);
     }
+
+
 
     @Override
     public String toString() {
-        // TODO: Implement.
-        return null;
+        String s = "Fig tree.";
+        if (season == Season.SUMMER) {
+            s = s+ " I give fruit.";
+        }
+        s += " My height is: " + height;
+        if (season == Season.WINTER) {
+            s = s+ " and I have no leaves";
+        } else {
+            s = s+ " and my color is: " + leavesColor;
+        }
+        return s;
     }
+
     @Override
     public void changeSeason() {
-        // TODO: Implement.
+        season = season.next();
+        switch (season) {
+            case WINTER:
+                height = height + 20;
+                leavesColor = null;
+                break;
+            case SPRING:
+                height = height + 30;
+                leavesColor = Color.GREEN;
+                break;
+            case SUMMER:
+                height = height + 30;
+                break;
+            case FALL:
+                height = height + 20;
+                leavesColor = Color.YELLOW;
+                break;
+        }
     }
 }
