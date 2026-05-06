@@ -44,8 +44,8 @@ class ProfileBasedRecommender<T extends Item> extends RecommenderSystem<T> {
         }
 
         return users.values().stream()
+                .filter(user -> user.getId() != userId)
                 .filter(user -> matchesProfile(targetUser, user))
-                .sorted(Comparator.comparingInt(User::getId))
                 .collect(toList());
     }
 
