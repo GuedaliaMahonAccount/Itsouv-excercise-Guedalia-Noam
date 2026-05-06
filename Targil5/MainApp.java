@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class MainApp {
-    // TODO: change the paths to correspond with the location of the files on the local computer
-    public static final String USERS_PATH = "Users.txt";
-    public static final String BOOKS_PATH = "Books.txt";
-    public static final String RATINGS_PATH = "Ratings.txt";
+    public static final String USERS_PATH = "Targil5/data/Users.txt";
+    public static final String BOOKS_PATH = "Targil5/data/Books.txt";
+    public static final String RATINGS_PATH = "Targil5/data/Ratings.txt";
     public static Map<Integer, User> users;
     public static Map<Integer, Book> books;
     public static List<Rating<Book>> ratings;
@@ -19,13 +20,33 @@ public class MainApp {
         initElements();
         testRecommenderSystem();
     }
+    
+    /**
+     * Parses tab-separated files and initializes users, books, and ratings.
+     * Uses Java Streams to process lines without explicit loops.
+     */
     public static void initElements() throws IOException {
-        // TODO: initialize users, books and ratings
+        // Parse users from Users.txt and collect into Map<Integer, User>
+        // where key is userId
+        users = Files.lines(Paths.get(USERS_PATH))
+                .map(User::new)
+                .collect(toMap(User::getId, user -> user));
+        
+        // Parse books from Books.txt and collect into Map<Integer, Book>
+        // where key is bookId
+        books = Files.lines(Paths.get(BOOKS_PATH))
+                .map(Book::new)
+                .collect(toMap(Book::getId, book -> book));
+        
+        // Parse ratings from Ratings.txt and collect into List<Rating<Book>>
+        ratings = Files.lines(Paths.get(RATINGS_PATH))
+                .map(Rating<Book>::new)
+                .collect(toList());
     }
     public static void testRecommenderSystem() {
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Choose recommender: [p]opularity, pro[f]ile, [u]ser similarity");
+        System.out.println("Choose recommender: [p] popularity, [f] profile, [u] user similarity");
         String type = in.nextLine().trim().toLowerCase();
 
         switch (type) {
@@ -37,7 +58,7 @@ public class MainApp {
                 if (op.equals("r")) {
                     System.out.print("Enter user ID: ");
                     int userId = in.nextInt();
-                    rec.recommendTop10(userId).forEach(System.out::println);
+                    printItems(rec.recommendTop10(userId));
                 } else if (op.equals("s")) {
                     System.out.print("Enter item ID: ");
                     int itemId = in.nextInt();
@@ -54,11 +75,11 @@ public class MainApp {
                 if (op.equals("r")) {
                     System.out.print("Enter user ID: ");
                     int userId = in.nextInt();
-                    rec.recommendTop10(userId).forEach(System.out::println);
+                    printItems(rec.recommendTop10(userId));
                 } else if (op.equals("m")) {
                     System.out.print("Enter user ID: ");
                     int userId = in.nextInt();
-                    rec.getMatchingProfileUsers(userId).forEach(System.out::println);
+                    printItems(rec.getMatchingProfileUsers(userId));
                 }
             }
 
@@ -73,7 +94,7 @@ public class MainApp {
                     case "r" -> {
                         System.out.print("Enter user ID: ");
                         int userId = in.nextInt();
-                        rec.recommendTop10(userId).forEach(System.out::println);
+                        printItems(rec.recommendTop10(userId));
                     }
                     case "gb" -> {
                         System.out.println("Global bias: " + String.format("%.2f", rec.getGlobalBias()));
@@ -100,6 +121,16 @@ public class MainApp {
             }
 
             default -> System.out.println("Unknown recommender type.");
+        }
+    }
+
+    private static void printItems(List<?> items) {
+        String output = items.stream()
+                .map(String::valueOf)
+                .collect(joining(System.lineSeparator()));
+
+        if (!output.isEmpty()) {
+            System.out.println(output);
         }
     }
 }
