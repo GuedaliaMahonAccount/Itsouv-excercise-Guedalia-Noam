@@ -35,3 +35,4 @@ public class Book implements Item {
                 .formatted(id, name, author, pages);
     }
 }
+
